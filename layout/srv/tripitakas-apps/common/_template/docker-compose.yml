@@ -1,0 +1,44 @@
+---
+version: '2.1'
+
+networks:
+  default:
+    driver: bridge
+  es_default:
+    external: true
+
+services:
+    mongodb:
+        restart: always
+        image: mongo:4.0.4-xenial
+        ports:
+            - @@external-mongodb-port@@:27017
+        volumes:
+            - ./mongo-data/db:/data/db
+        environment:
+            - MONGO_INITDB_DATABASE=@@db-name@@
+            - MONGO_INITDB_ROOT_USERNAME=@@db-user@@
+            - MONGO_INITDB_ROOT_PASSWORD=@@db-password@@
+
+    web:
+        restart: always
+        image: common_tripitaka-base:latest
+
+        ports:
+            - "127.0.0.1:@@host-port@@:8000"
+        links:
+            - mongodb:mongodb
+        volumes:
+            - ./runtime:/runtime
+            - ./code:/code
+            - ./extra_modules:/extra_modules
+        working_dir: /runtime
+        environment:
+            - DEBUG=@@debug-mode@@
+        depends_on:
+            - mongodb
+        networks:
+            - default
+            - es_default
+
+        command: "/scripts/init-runtime-and-run.sh"

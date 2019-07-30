@@ -1,0 +1,18 @@
+---
+version: '2.1'
+
+services:
+    es:
+        restart: always
+        image: elasticsearch:7.2.0
+        #network_mode: host
+        ports:
+           - 9200:9200
+           - 9300:9300
+        volumes:
+            - ./es/data:/usr/share/elasticsearch/data
+            - ./es/plugins:/usr/share/elasticsearch/plugins
+            #- ./es/config:/usr/share/elasticsearch/config #only u want
+
+        environment:
+            - discovery.type=single-node

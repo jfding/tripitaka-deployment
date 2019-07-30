@@ -1,0 +1,12 @@
+---
+version: '2.1'
+
+services:
+    tripitaka-base:
+        restart: always
+        build: ./_docker
+        volumes:
+            - ./work:/work
+        working_dir: /work
+        environment:
+            - VERB=0

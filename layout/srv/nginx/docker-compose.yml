@@ -1,0 +1,12 @@
+---
+version: '2.1'
+
+services:
+    web:
+      image: nginx:1.16
+      volumes:
+       - ./conf.d:/etc/nginx/conf.d/
+      network_mode: host
+      environment:
+       - NGINX_HOST=work.tripitakas.net
+       - NGINX_PORT=80
